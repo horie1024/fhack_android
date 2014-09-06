@@ -35,9 +35,9 @@ public class MainFragment extends Fragment implements LocationListener {
     @InjectView(R.id.roppongi)
     RelativeLayout roppongi;
 
-    private String[] shinjukuLatLon = {"35.658643", "139.7006439"};
-    private String[] shibuyaLatLon = {"35.6909959", "139.7037901"};
-    private String[] daikanyamaLatLon = {"35.6480324", "139.7029721"};
+    final private String[] shinjukuLatLon = {"35.658643", "139.7006439"};
+    final private String[] shibuyaLatLon = {"35.6909959", "139.7037901"};
+    final private String[] daikanyamaLatLon = {"35.6480324", "139.7029721"};
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

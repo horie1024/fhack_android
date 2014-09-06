@@ -1,12 +1,12 @@
 package com.example.horie.hack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.android.volley.Request;
@@ -15,9 +15,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.horie.hack.data.Item;
+import com.example.horie.hack.service.UtilityService;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -51,10 +56,36 @@ public class AreaFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject result = (JSONObject) response.getJSONArray("Results").get(0);
-                            updateMobileLayout(result);
-                            updateWearLayout(result);
-                            Log.v("hoge", String.valueOf(result));
+                            JSONObject iqon = response.getJSONObject("Iqon");
+                            JSONArray results = iqon.getJSONArray("Results");
+                            ArrayList<Item> items = new ArrayList<Item>();
+
+                            for (int i = 0; i < results.length(); i++) {
+                                JSONObject result = (JSONObject) results.get(i);
+
+                                ArrayList<String> placeList = new ArrayList<String>();
+                                JSONArray places =  result.getJSONArray("Place");
+                                for (int j = 0; j < places.length(); j++) {
+                                    JSONObject place = (JSONObject) places.get(j);
+                                    if (place.getBoolean("Flag")) {
+                                        placeList.add(place.getString("Name"));
+                                    }
+                                }
+
+                                Item item = new Item(
+                                        result.getString("Title"),
+                                        result.getString("Brand_name"),
+                                        result.getString("Link"),
+                                        result.getString("Desc_long"),
+                                        result.getString("Price"),
+                                        result.getJSONObject("Images").getString("L_image"),
+                                        placeList);
+
+                                items.add(item);
+                            }
+
+                            updateMobileLayout(items);
+                            updateWearLayout(items);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -69,12 +100,14 @@ public class AreaFragment extends Fragment {
                 }));
     }
 
-    private void updateMobileLayout(JSONObject result) {
+    private void updateMobileLayout(ArrayList<Item> items) {
         // TODO: ここでモバイル版のレイアウトを開発
     }
 
-    private void updateWearLayout(JSONObject result) {
-        // TODO: ここでWearのレイアウトを開発
+    private void updateWearLayout(ArrayList<Item> items) {
+        Intent intent = new Intent(getActivity(), UtilityService.class);
+        intent.putExtra("ITEMS", items);
+        getActivity().startService(intent);
     }
 
 }
