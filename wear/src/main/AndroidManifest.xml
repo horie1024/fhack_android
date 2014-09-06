@@ -10,14 +10,15 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.DeviceDefault">
         <activity
-            android:name=".MyActivity"
-            android:label="@string/app_name">
+            android:name=".MyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ItemsActivity" />
 
         <service android:name=".service.ListenerService">
             <intent-filter>

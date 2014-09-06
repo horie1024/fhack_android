@@ -81,6 +81,7 @@ public class UtilityService extends IntentService {
                 dataMap.getDataMap().putString("item_title", item.Title);
                 dataMap.getDataMap().putString("item_brand_name", item.BrandName);
                 dataMap.getDataMap().putString("item_link", item.Link);
+                dataMap.getDataMap().putString("desc_long", item.DescLong);
                 dataMap.getDataMap().putString("item_price", item.Price);
                 dataMap.getDataMap().putStringArrayList("place_list", item.PlaceList);
                 dataMap.getDataMap().putAsset("item_image", imageAsset);

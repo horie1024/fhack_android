@@ -4,10 +4,12 @@
     <string name="app_name">Hack</string>
     <string name="hello_round">Hello Round World!</string>
     <string name="hello_square">本来はMyActivityは呼び出さないべきですが確認のため通してます</string>
+    <string name="show_item">アイテムを見る</string>
+    <string name="exit_intro_text">長押しで終了</string>
 
     <plurals name="attractions_found">
-        <item quantity="one">現在地から近いショップにある人気アイテムはこちら</item>
-        <item quantity="other">%d tourist attractions nearby!</item>
+        <item quantity="one">近くにショップを発見！人気アイテムをチェック</item>
+        <item quantity="other">近くにショップを発見！人気アイテムをチェック</item>
     </plurals>
 
 </resources>

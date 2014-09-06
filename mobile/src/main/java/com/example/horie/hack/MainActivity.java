@@ -1,5 +1,7 @@
 package com.example.horie.hack;
 
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,10 +19,14 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_container);
 
+        ActionBar actionBar = getActionBar();
+
         Intent intent = getIntent();
         String page = (intent.getStringExtra("PAGE") != null) ? intent.getStringExtra("PAGE") : "";
 
         if (page.equals("AREA")) {
+            actionBar.setTitle(R.string.area_fragment_label);
+
             Bundle argsArea = new Bundle();
             argsArea.putString("LAT", intent.getStringExtra("LAT"));
             argsArea.putString("LON", intent.getStringExtra("LON"));
@@ -28,6 +34,8 @@ public class MainActivity extends FragmentActivity {
             areaFragment.setArguments(argsArea);
             changeFragment(areaFragment);
         } else {
+            actionBar.setTitle(R.string.main_fragment_label);
+
             changeFragment(new MainFragment());
         }
     }

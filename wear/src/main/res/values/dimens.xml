@@ -1,0 +1,7 @@
+<resources>
+    <dimen name="standard_margin">4dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+
+    <dimen name="page_row_margin">50dp</dimen>
+    <dimen name="page_column_margin">50dp</dimen>
+</resources>

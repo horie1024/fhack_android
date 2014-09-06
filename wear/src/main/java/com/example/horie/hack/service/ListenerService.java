@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
-import com.example.horie.hack.MyActivity;
+import com.example.horie.hack.ItemsActivity;
 import com.example.horie.hack.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -77,8 +77,7 @@ public class ListenerService extends WearableListenerService {
 
         ArrayList<String> items = dataMap.getStringArrayList("extra_updated_items");
 
-        Intent intent = new Intent(this, MyActivity.class);
-        Log.v("hoge", String.valueOf(items));
+        Intent intent = new Intent(this, ItemsActivity.class);
         intent.putExtra("extra_updated_items", items);
         PendingIntent pendingIntent =
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -102,7 +101,7 @@ public class ListenerService extends WearableListenerService {
                             getResources().getQuantityString(R.plurals.attractions_found, count, count))
                     .setSmallIcon(R.drawable.ic_launcher)
                     .addAction(R.drawable.ic_full_explore,
-                            "もっと見る",
+                            getString(R.string.show_item),
                             pendingIntent)
                     .extend(new Notification.WearableExtender()
                                     .setBackground(bitmap)

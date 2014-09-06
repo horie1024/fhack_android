@@ -4,6 +4,9 @@
     <string name="app_name">Hack</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="main_fragment_label">エリアを選択</string>
+    <string name="area_fragment_label">周辺のオススメアイテム</string>
+
     <string name="shinjuku">新宿</string>
     <string name="shibuya">渋谷</string>
     <string name="daikanyama">代官山</string>
