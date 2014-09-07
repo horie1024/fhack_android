@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MenuItem;
 
 /**
  * Created by nissiy on 2014/09/06.
@@ -26,6 +27,7 @@ public class MainActivity extends FragmentActivity {
 
         if (page.equals("AREA")) {
             actionBar.setTitle(R.string.area_fragment_label);
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
             Bundle argsArea = new Bundle();
             argsArea.putString("LAT", intent.getStringExtra("LAT"));
@@ -45,6 +47,17 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+        return true;
     }
 
 }
