@@ -1,13 +1,20 @@
 package com.example.horie.hack;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,18 +29,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by nissiy on 2014/09/06.
  */
 public class AreaFragment extends Fragment {
     private int displayWidth;
+    private LayoutInflater inflater;
+
+    @InjectView(R.id.area_container)
+    LinearLayout areaContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.inflater = inflater;
         ScrollView mainLayout = (ScrollView) inflater.inflate(R.layout.area_fragment, null);
         ButterKnife.inject(this, mainLayout);
         displayWidth = getActivity().getResources().getDisplayMetrics().widthPixels;
@@ -47,8 +62,6 @@ public class AreaFragment extends Fragment {
     }
 
     private void requestHttp(String lat, String lon) {
-        Log.v("hoge", lat);
-        Log.v("hoge", lon);
         String url = "http://ec2-54-68-44-142.us-west-2.compute.amazonaws.com:8080/api?lat=" + lat + "&lng=" + lon;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         requestQueue.add(new JsonObjectRequest(Request.Method.GET, url, null,
@@ -101,7 +114,82 @@ public class AreaFragment extends Fragment {
     }
 
     private void updateMobileLayout(ArrayList<Item> items) {
-        // TODO: ここでモバイル版のレイアウトを開発
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+
+            LinearLayout areaParts = (LinearLayout) inflater.inflate(R.layout.area_parts, null);
+            RelativeLayout imageParentLayout = (RelativeLayout) areaParts.findViewById(R.id.image_parent_layout);
+            final ImageView imageView = (ImageView) areaParts.findViewById(R.id.image_view);
+            TextView brandName = (TextView) areaParts.findViewById(R.id.brand_name);
+            TextView itemTitle = (TextView) areaParts.findViewById(R.id.item_title);
+            TextView price = (TextView) areaParts.findViewById(R.id.price);
+            TextView shopList = (TextView) areaParts.findViewById(R.id.shop_list);
+
+            areaParts.setPadding(0, 0, 0, 2);
+
+            LinearLayout.LayoutParams imageParentLp = new LinearLayout.LayoutParams(displayWidth / 3, displayWidth / 3);
+            imageParentLayout.setLayoutParams(imageParentLp);
+
+            final String imageUrl = item.ImageUrl;
+            AsyncTask<Void, Void, Bitmap> imageLoadTask = new AsyncTask<Void, Void, Bitmap>() {
+                @Override
+                protected Bitmap doInBackground(Void... params) {
+                    try {
+                        return getBitmapFromUrl(imageUrl);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Bitmap bitmap) {
+                    try {
+                        if (bitmap != null) {
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            imageLoadTask.execute();
+
+            brandName.setText(item.BrandName);
+            itemTitle.setText(item.Title);
+            price.setText(item.Price + "円");
+
+            // TODO: 多分parseからdataに突っ込むときに失敗している
+            // TODO: ！！！致命的！！！
+            String shopListText = "";
+            for (int j = 0; j < item.PlaceList.size(); j++) {
+                shopListText = shopListText + item.PlaceList.get(j);
+                if (j != item.PlaceList.size() - 1) {
+                    shopListText = shopListText + ", ";
+                }
+            }
+            shopList.setText(shopListText);
+
+            areaParts.setTag(item.Link);
+            areaParts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String link = (String) v.getTag();
+                    Uri uri = Uri.parse(link);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            });
+
+            areaContainer.addView(areaParts);
+        }
+    }
+
+    private Bitmap getBitmapFromUrl(String url) throws Exception {
+        InputStream input = new URL(url).openStream();
+        Bitmap bitmap = BitmapFactory.decodeStream(input);
+        input.close();
+        return bitmap;
     }
 
     private void updateWearLayout(ArrayList<Item> items) {

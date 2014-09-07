@@ -3,12 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#e4e4e4"
-        android:orientation="vertical"
-        android:padding="15dp">
+        android:layout_height="wrap_content">
 
-    </LinearLayout>
+        <LinearLayout android:id="@+id/area_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#d9d9d9"
+            android:orientation="vertical" />
+
+    </FrameLayout>
+
 </ScrollView>
